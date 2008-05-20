@@ -1,0 +1,3 @@
+[submodule "peg-markdown"]
+	path = peg-markdown
+	url = git://github.com/jgm/peg-markdown.git

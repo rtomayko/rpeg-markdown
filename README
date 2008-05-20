@@ -1,0 +1,14 @@
+Ruby peg-markdown Extension
+===========================
+
+The peg-markdown extension wraps John MacFarlane's C implementation of
+Markdown (see [peg-markdown][1]) in a Ruby extension.
+
+[1]: http://github.com/jgm/peg-markdown/ 
+   "Jon MacFarleane's peg-markdown project"
+
+### COPYING
+
+The peg-markdown sources are licensed under the GPL and the Ruby extension
+sources adopts this license. See the file LICENSE included with this
+distribution for more information.
