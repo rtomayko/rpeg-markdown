@@ -22,6 +22,12 @@
 #include <assert.h>
 #include "markdown_peg.h"
 
+/***********************************************************************/
+#include "markdown_buffer.h"
+#define printf  rb_markdown_buffer_printf
+#define putchar rb_markdown_buffer_putchar
+/***********************************************************************/
+
 /* TODO remove */
 static extensions = 0;
 

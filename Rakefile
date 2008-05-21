@@ -3,7 +3,6 @@ require 'rake/clean'
 
 DLEXT = Config::CONFIG['DLEXT']
 
-
 desc 'Gather required peg-markdown sources into extension directory'
 task :gather do |t|
   sh 'cd peg-markdown && make markdown_parser.c'
@@ -29,3 +28,13 @@ end
 
 desc 'Build the peg-markdown extension'
 task :build => "lib/markdown.#{DLEXT}"
+
+task 'test:unit' => [ :build ] do |t|
+  ruby 'test.rb'
+end
+
+task 'test:conformance' => [ :build ] do |t|
+  chdir('peg-markdown/MarkdownTest_1.0.3') do
+    sh "./MarkdownTest.pl --script=../../bin/rpeg-markdown --tidy"
+  end
+end
