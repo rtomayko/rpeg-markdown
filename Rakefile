@@ -73,12 +73,32 @@ end
 desc 'Build the peg-markdown extension'
 task :build => "lib/markdown.#{DLEXT}"
 
+desc 'Run unit tests'
 task 'test:unit' => [ :build ] do |t|
   ruby 'test.rb'
 end
 
+desc 'Run conformance tests'
 task 'test:conformance' => [ 'submodule:update', :build ] do |t|
   chdir('peg-markdown/MarkdownTest_1.0.3') do
     sh "./MarkdownTest.pl --script=../../bin/rpeg-markdown --tidy"
+  end
+end
+
+desc 'Run unit and conformance tests'
+task :test => [ 'test:unit', 'test:conformance' ]
+
+
+# ==========================================================
+# Rubyforge
+# ==========================================================
+
+PKGNAME = "pkg/rpeg-markdown-#{VERS}"
+
+desc 'Publish new release to rubyforge'
+task :release => [ "#{PKGNAME}.gem", "#{PKGNAME}.tar.gz" ] do |t|
+  sh <<-end
+    rubyforge add_release wink rpeg-markdown #{VERS} #{PKGNAME}.gem &&
+    rubyforge add_file    wink rpeg-markdown #{VERS} #{PKGNAME}.tar.gz
   end
 end
