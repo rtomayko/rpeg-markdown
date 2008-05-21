@@ -32,9 +32,23 @@ spec =
     p.need_zip = false
   end
 
+namespace :submodule do
+  desc 'Init the peg-markdown submodule'
+  task :init do |t|
+    unless File.exist? 'peg-markdown/markdown.c'
+      rm_rf 'peg-markdown'
+      sh 'git submodule init peg-markdown'
+      sh 'git submodule update peg-markdown'
+    end
+  end
+  
+  task :update => :init do
+    sh 'git submodule update peg-markdown'
+  end
+end
 
 desc 'Gather required peg-markdown sources into extension directory'
-task :gather do |t|
+task :gather => 'submodule:update' do |t|
   sh 'cd peg-markdown && make markdown_parser.c'
   cp FileList['peg-markdown/markdown_{peg.h,parser.c,output.c}'], 'ext/',
     :preserve => true,
@@ -63,7 +77,7 @@ task 'test:unit' => [ :build ] do |t|
   ruby 'test.rb'
 end
 
-task 'test:conformance' => [ :build ] do |t|
+task 'test:conformance' => [ 'submodule:update', :build ] do |t|
   chdir('peg-markdown/MarkdownTest_1.0.3') do
     sh "./MarkdownTest.pl --script=../../bin/rpeg-markdown --tidy"
   end
