@@ -41,7 +41,7 @@ namespace :submodule do
       sh 'git submodule update peg-markdown'
     end
   end
-  
+
   task :update => :init do
     sh 'git submodule update peg-markdown'
   end
