@@ -7,7 +7,16 @@ Markdown (see [peg-markdown][1]) in a Ruby extension.
 [1]: http://github.com/jgm/peg-markdown/ 
    "Jon MacFarleane's peg-markdown project"
 
-### COPYING
+BUGS
+----
+
+This extension currently leaks memory like a sieve. The underlying C
+implementation assumes the process will end immediately after processing
+and thus punts on memory management entirely. Use in any kind of long-running
+environment is highly discouraged until this is corrected.
+
+COPYING
+-------
 
 The peg-markdown sources are licensed under the GPL and the Ruby extension
 sources adopts this license. See the file LICENSE included with this
