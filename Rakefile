@@ -2,6 +2,8 @@ require 'rake/clean'
 require 'rake/packagetask'
 require 'rake/gempackagetask'
 
+task :default => :test
+
 DLEXT = Config::CONFIG['DLEXT']
 VERS = '0.1.0'
 
@@ -42,19 +44,29 @@ namespace :submodule do
     end
   end
 
+  desc 'Update the peg-markdown submodule'
   task :update => :init do
-    sh 'git submodule update peg-markdown'
+    sh 'git submodule update peg-markdown' unless File.symlink?('peg-markdown')
   end
+
+  file 'peg-markdown/markdown.c' do
+    Rake::Task['submodule:init'].invoke
+  end
+  task :exist => 'peg-markdown/markdown.c'
 end
 
 desc 'Gather required peg-markdown sources into extension directory'
-task :gather => 'submodule:update' do |t|
+task :gather => 'submodule:exist' do |t|
   sh 'cd peg-markdown && make markdown_parser.c'
-  cp FileList['peg-markdown/markdown_{peg.h,parser.c,output.c}'], 'ext/',
+  files =
+    FileList[
+      'peg-markdown/markdown_{peg.h,parser.c,output.c,lib.c,lib.h}',
+      'peg-markdown/bufopen.{c,h}'
+    ]
+  cp files, 'ext/',
     :preserve => true,
     :verbose => true
 end
-CLOBBER.include 'ext/markdown_{peg.h,parser.c,output.c}'
 
 file 'ext/Makefile' => FileList['ext/{extconf.rb,*.c,*.h,*.rb}'] do
   chdir('ext') { ruby 'extconf.rb' }
@@ -79,9 +91,35 @@ task 'test:unit' => [ :build ] do |t|
 end
 
 desc 'Run conformance tests'
-task 'test:conformance' => [ 'submodule:update', :build ] do |t|
+task 'test:conformance' => %w[submodule:exist build] do |t|
+  script = "#{pwd}/bin/rpeg-markdown"
   chdir('peg-markdown/MarkdownTest_1.0.3') do
-    sh "./MarkdownTest.pl --script=../../bin/rpeg-markdown --tidy"
+    sh "./MarkdownTest.pl --script='#{script}' --tidy"
+  end
+end
+
+desc "See how much memory we're losing"
+task 'test:mem' => %w[submodule:exist build] do |t|
+  $: << File.join(File.dirname(__FILE__), "lib")
+  require 'markdown'
+  FileList['test.txt', 'peg-markdown/MarkdownTest_1.0.3/Tests/*.text'].each do |file|
+    printf "%s: \n", file
+    markdown = Markdown.new(File.read(file))
+    iterations = (ENV['N'] || 100).to_i
+    total, growth = [], []
+    iterations.times do |i|
+      start = Time.now
+      GC.start
+      markdown.to_html
+      duration = Time.now - start
+      GC.start
+      total << `ps -o rss= -p #{Process.pid}`.to_i
+      next if i == 0
+      growth << (total.last - (total[-2] || 0))
+      # puts "%03d: %06.02f ms / %dK used / %dK growth" % [ i, duration, total.last, growth.last ]
+    end
+    average = growth.inject(0) { |sum,x| sum + x } / growth.length
+    printf "  %dK avg growth (per run) / %dK used (after %d runs)\n", average, total.last, iterations
   end
 end
 

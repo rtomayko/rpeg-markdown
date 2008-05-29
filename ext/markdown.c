@@ -1,6 +1,5 @@
 #include "ruby.h"
-#include "markdown_peg.h"
-#include "markdown_buffer.h"
+#include "markdown_lib.h"
 
 static VALUE rb_cMarkdown;
 
@@ -12,79 +11,36 @@ static ID id_notes;
 #define INCREMENT 4096  /* size of chunks in which to allocate memory */
 
 static VALUE
-markdown_to_html(VALUE self)
+rb_markdown_to_html(VALUE self)
 {
-  element parsed_input;
-  VALUE output_buffer;
+    /* grab char pointer to markdown input text */
+    VALUE text = rb_funcall(self, id_text, 0);
+    Check_Type(text, T_STRING);
+    char * ptext = StringValuePtr(text);
 
-  char *inputbuf, *curchar;
-  int charstotab, buflength, maxlength;
+    /* flip extension bits */
+    int extensions = 0;
+    if ( rb_funcall(self, id_smart, 0) == Qtrue )
+        extensions = extensions | EXT_SMART ;
+    if ( rb_funcall(self, id_notes, 0) == Qtrue )
+        extensions = extensions | EXT_NOTES ;
 
-  /* grab char pointer to markdown input text */
-  VALUE text = rb_funcall(self, id_text, 0);
-  Check_Type(text, T_STRING);
-  char * ptext = StringValuePtr(text);
+    char *html = markdown_to_string(ptext, extensions, HTML_FORMAT);
+    VALUE result = rb_str_new2(html);
+    free(html);
 
-  buflength = 0;
-  maxlength = RSTRING(text)->len >= INCREMENT ?
-    RSTRING(text)->len :
-    INCREMENT;
-  inputbuf = malloc(maxlength);
-  curchar = inputbuf;
-
-  charstotab = TABSTOP;
-  while ((*curchar = *ptext++) != '\0') {
-    switch (*curchar) {
-      case '\t':
-        while (charstotab > 0)
-          *curchar = ' ', curchar++, buflength++, charstotab--; 
-        break;
-      case '\n':
-        curchar++, buflength++, charstotab = TABSTOP;
-        break;
-      default:
-        curchar++, buflength++, charstotab--; 
-    }
-    if (charstotab == 0)
-      charstotab = TABSTOP;
-    if (buflength > maxlength - TABSTOP - 3) {
-      maxlength += INCREMENT;
-      inputbuf = realloc(inputbuf, maxlength);
-      curchar = inputbuf + buflength;
-      if (inputbuf == NULL) {
-        /* TODO: no memory */
-      }
-    }
-  }
-  *curchar++ = '\n';
-  *curchar++ = '\n';
-  *curchar   = '\0';
-  buflength+= 2;
-
-  /* flip extension bits */
-  int extensions = 0;
-  if ( rb_funcall(self, id_smart, 0) == Qtrue )
-    extensions = extensions | EXT_SMART ;
-  if ( rb_funcall(self, id_notes, 0) == Qtrue )
-    extensions = extensions | EXT_NOTES ;
-
-  /* parse markdown input into sematic element tree */
-  parsed_input = markdown(inputbuf, extensions);
-
-  /* allocate output buffer and generate output */
-  output_buffer = rb_markdown_buffer_init(buflength * 2);
-  print_element(parsed_input, HTML_FORMAT);
-  rb_markdown_buffer_free();
-  return output_buffer;
+    return result;
 }
 
 void Init_markdown()
 {
-  /* Initialize frequently used Symbols */
-  id_text = rb_intern("text");
-  id_smart = rb_intern("smart");
-  id_notes = rb_intern("notes");
+    /* Initialize frequently used Symbols */
+    id_text = rb_intern("text");
+    id_smart = rb_intern("smart");
+    id_notes = rb_intern("notes");
 
-  rb_cMarkdown = rb_define_class("Markdown", rb_cObject);
-  rb_define_method(rb_cMarkdown, "to_html", markdown_to_html, 0);
+    rb_cMarkdown = rb_define_class("Markdown", rb_cObject);
+    rb_define_method(rb_cMarkdown, "to_html", rb_markdown_to_html, 0);
 }
+
+// vim: ts=4 sw=4

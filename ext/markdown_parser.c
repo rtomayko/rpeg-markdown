@@ -111,6 +111,7 @@ static element mk_element(int key) {
     result.key = key;
     result.children = NULL;
     result.next = NULL;
+    result.contents.str = NULL;
     return result;
 }
 
@@ -120,6 +121,18 @@ static element mk_str(char *string) {
     assert(string != NULL);
     result = mk_element(STR);
     result.contents.str = strdup(string);
+    return result;
+}
+
+/* mk_str_from_list - makes STR element by concatenating a
+ * reversed list of strings, adding optional extra newline */
+static element mk_str_from_list(element *list, bool extra_newline) {
+    element result;
+    char *c = concat_string_list(reverse(list));
+    if (extra_newline)
+        strcat(c, "\n");  /* concate_string_list allocates extra byte for this */
+    result = mk_element(STR);
+    result.contents.str = c;
     return result;
 }
 
@@ -667,9 +680,7 @@ YY_ACTION(void) yy_3_RawNoteBlock(char *yytext, int yyleng)
 {
 #define a yyval[-1]
   yyprintf((stderr, "do yy_3_RawNoteBlock\n"));
-     char *c = concat_string_list(reverse(a.children));
-                    strcat(c, "\n");  /* Note: an extra byte was allocated for this */
-                    yy = mk_str(c);
+     yy = mk_str_from_list(a.children, true);
                     yy.key = RAW;
                 ;
 #undef a
@@ -1049,12 +1060,12 @@ YY_ACTION(void) yy_1_LineBreak(char *yytext, int yyleng)
 YY_ACTION(void) yy_1_TerminalEndline(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_TerminalEndline\n"));
-   yy.key = SPACE; yy.contents.str = ""; ;
+   yy.key = SPACE; yy.contents.str = strdup(""); ;
 }
 YY_ACTION(void) yy_1_NormalEndline(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_NormalEndline\n"));
-   yy.key = SPACE; yy.contents.str = "\n"; ;
+   yy.key = SPACE; yy.contents.str = strdup("\n"); ;
 }
 YY_ACTION(void) yy_1_Entity(char *yytext, int yyleng)
 {
@@ -1074,7 +1085,7 @@ YY_ACTION(void) yy_1_Str(char *yytext, int yyleng)
 YY_ACTION(void) yy_1_Space(char *yytext, int yyleng)
 {
   yyprintf((stderr, "do yy_1_Space\n"));
-   yy.key = SPACE; yy.contents.str = " "; ;
+   yy.key = SPACE; yy.contents.str = strdup(" "); ;
 }
 YY_ACTION(void) yy_3_Inlines(char *yytext, int yyleng)
 {
@@ -1154,7 +1165,7 @@ YY_ACTION(void) yy_3_ListContinuationBlock(char *yytext, int yyleng)
 {
 #define a yyval[-1]
   yyprintf((stderr, "do yy_3_ListContinuationBlock\n"));
-   yy = mk_str(concat_string_list(reverse(a.children))); ;
+   yy = mk_str_from_list(a.children, false); ;
 #undef a
 }
 YY_ACTION(void) yy_2_ListContinuationBlock(char *yytext, int yyleng)
@@ -1177,7 +1188,7 @@ YY_ACTION(void) yy_3_ListBlock(char *yytext, int yyleng)
 {
 #define a yyval[-1]
   yyprintf((stderr, "do yy_3_ListBlock\n"));
-   yy = mk_str(concat_string_list(reverse(a.children))); ;
+   yy = mk_str_from_list(a.children, false); ;
 #undef a
 }
 YY_ACTION(void) yy_2_ListBlock(char *yytext, int yyleng)
@@ -1200,7 +1211,7 @@ YY_ACTION(void) yy_3_ListItem(char *yytext, int yyleng)
   yyprintf((stderr, "do yy_3_ListItem\n"));
     element *raw;
                     raw = malloc(sizeof(element));
-                    *raw = mk_str(concat_string_list(reverse(a.children)));
+                    *raw = mk_str_from_list(a.children, false);
                     raw->key = RAW;
                     yy = mk_element(LISTITEM);
                     yy.children = raw;
@@ -1267,7 +1278,8 @@ YY_ACTION(void) yy_2_Verbatim(char *yytext, int yyleng)
 {
 #define a yyval[-1]
   yyprintf((stderr, "do yy_2_Verbatim\n"));
-   yy = mk_str(concat_string_list(reverse(a.children))); yy.key = VERBATIM; ;
+   yy = mk_str_from_list(a.children, false);
+                 yy.key = VERBATIM; ;
 #undef a
 }
 YY_ACTION(void) yy_1_Verbatim(char *yytext, int yyleng)
@@ -1281,7 +1293,7 @@ YY_ACTION(void) yy_3_VerbatimChunk(char *yytext, int yyleng)
 {
 #define a yyval[-1]
   yyprintf((stderr, "do yy_3_VerbatimChunk\n"));
-   yy = mk_str(concat_string_list(reverse(a.children))); ;
+   yy = mk_str_from_list(a.children, false); ;
 #undef a
 }
 YY_ACTION(void) yy_2_VerbatimChunk(char *yytext, int yyleng)
@@ -1302,9 +1314,7 @@ YY_ACTION(void) yy_4_BlockQuoteRaw(char *yytext, int yyleng)
 {
 #define a yyval[-1]
   yyprintf((stderr, "do yy_4_BlockQuoteRaw\n"));
-     char *c = concat_string_list(reverse(a.children));
-                     strcat(c, "\n");  /* Note: an extra byte was allocated for this */
-                     yy = mk_str(c);
+     yy = mk_str_from_list(a.children, true);
                      yy.key = RAW;
                  ;
 #undef a
@@ -5581,6 +5591,38 @@ YY_PARSE(int) YYPARSE(void)
 
 #endif
 
+
+/* free_element - free next and child elements recursively */
+static void free_element_tree(element * elt) {
+    element * next = NULL;
+    while (elt != NULL) {
+        next = elt->next;
+        if (elt->children != NULL && elt->key != SPACE) {
+            free_element_tree(elt->children);
+            elt->children = NULL;
+        }
+        if (elt->key == STR || elt->key == RAW) {
+            free(elt->contents.str);
+            elt->contents.str = NULL;
+        }
+        free(elt);
+        elt = next;
+    }
+}
+
+/* free_element - free element recursively */
+void markdown_free(element result) {
+    if (result.children) {
+        free_element_tree(result.children);
+        result.children = NULL;
+    }
+    if (result.next) {
+        free_element_tree(result.next);
+        result.next = NULL;
+    }
+    if (result.key == STR || result.key == RAW)
+        free(result.contents.str);
+}
 
 element markdown(char *string, int extensions) {
 
