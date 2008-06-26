@@ -11,7 +11,7 @@ static ID id_notes;
 #define INCREMENT 4096  /* size of chunks in which to allocate memory */
 
 static VALUE
-rb_markdown_to_html(VALUE self)
+rb_markdown_to_html(int argc, VALUE *argv, VALUE self)
 {
     /* grab char pointer to markdown input text */
     VALUE text = rb_funcall(self, id_text, 0);
@@ -40,7 +40,7 @@ void Init_markdown()
     id_notes = rb_intern("notes");
 
     rb_cMarkdown = rb_define_class("Markdown", rb_cObject);
-    rb_define_method(rb_cMarkdown, "to_html", rb_markdown_to_html, 0);
+    rb_define_method(rb_cMarkdown, "to_html", rb_markdown_to_html, -1);
 }
 
 // vim: ts=4 sw=4

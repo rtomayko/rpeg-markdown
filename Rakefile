@@ -5,7 +5,7 @@ require 'rake/gempackagetask'
 task :default => :test
 
 DLEXT = Config::CONFIG['DLEXT']
-VERS = '0.1.0'
+VERS = '0.2.0'
 
 spec =
   Gem::Specification.new do |s|
@@ -85,17 +85,39 @@ end
 desc 'Build the peg-markdown extension'
 task :build => "lib/markdown.#{DLEXT}"
 
+desc 'Run unit and conformance tests'
+task :test => [ 'test:unit', 'test:conformance' ]
+
 desc 'Run unit tests'
-task 'test:unit' => [ :build ] do |t|
-  ruby 'test.rb'
+task 'test:unit' => [:build] do |t|
+  ruby 'test/markdown_test.rb'
 end
 
-desc 'Run conformance tests'
-task 'test:conformance' => %w[submodule:exist build] do |t|
+desc 'Run conformance tests (MARKDOWN_TEST_VER=1.0)'
+task 'test:conformance' => [:build] do |t|
   script = "#{pwd}/bin/rpeg-markdown"
-  chdir('peg-markdown/MarkdownTest_1.0.3') do
+  test_version = ENV['MARKDOWN_TEST_VER'] || '1.0'
+  chdir("test/MarkdownTest_#{test_version}") do
     sh "./MarkdownTest.pl --script='#{script}' --tidy"
   end
+end
+
+desc 'Run version 1.0 conformance suite'
+task 'test:conformance:1.0' => 'test:conformance'
+
+desc 'Run 1.0.3 conformance suite'
+task 'test:conformance:1.0.3' => [:build] do |t|
+  ENV['MARKDOWN_TEST_VER'] = '1.0.3'
+  Rake::Task['test:conformance'].invoke
+end
+
+desc 'Run unit and conformance tests'
+task :test => %w[test:unit test:conformance]
+
+desc 'Run benchmarks'
+task :benchmark => :build do |t|
+  $:.unshift 'lib'
+  load 'test/benchmark.rb'
 end
 
 desc "See how much memory we're losing"
@@ -122,10 +144,6 @@ task 'test:mem' => %w[submodule:exist build] do |t|
     printf "  %dK avg growth (per run) / %dK used (after %d runs)\n", average, total.last, iterations
   end
 end
-
-desc 'Run unit and conformance tests'
-task :test => [ 'test:unit', 'test:conformance' ]
-
 
 # ==========================================================
 # Rubyforge
