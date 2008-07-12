@@ -12,13 +12,18 @@ spec =
     s.name              = "rpeg-markdown"
     s.version           = VERS
     s.summary           = "Ruby extension library for peg-markdown"
-    s.files             = FileList['README','LICENSE','Rakefile','test.rb','{lib,ext}/**.rb','ext/*.{c,h}','bin/rpeg-markdown']
+    s.files             = FileList[
+                            'README','LICENSE','Rakefile',
+                            '{lib,ext,test}/**.rb','ext/*.{c,h}',
+                            'test/MarkdownTest*/**/*',
+                            'bin/rpeg-markdown'
+                          ]
     s.bindir            = 'bin'
     s.executables       << 'rpeg-markdown'
     s.require_path      = 'lib'
     s.has_rdoc          = true
     s.extra_rdoc_files  = ['README', 'LICENSE']
-    s.test_files        = Dir['test.rb']
+    s.test_files        = FileList['test/markdown_test.rb']
     s.extensions        = ['ext/extconf.rb']
 
     s.author            = 'Ryan Tomayko'
