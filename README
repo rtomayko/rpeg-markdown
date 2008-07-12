@@ -7,13 +7,28 @@ Markdown (see [peg-markdown][1]) in a Ruby extension.
 [1]: http://github.com/jgm/peg-markdown/ 
    "Jon MacFarleane's peg-markdown project"
 
-BUGS
-----
+Installation/Hacking
+--------------------
 
-This extension currently leaks memory like a sieve. The underlying C
-implementation assumes the process will end immediately after processing
-and thus punts on memory management entirely. Use in any kind of long-running
-environment is highly discouraged until this is corrected.
+This library requires a recent version of glib2.
+
+The rpeg-markdown gem is available from Rubyforge:
+
+  $ sudo gem install rpeg-markdown
+
+A Git repository is available for hacking:
+
+  $ git clone git://github.com/rtomayko/rpeg-markdown.git
+  $ cd rpeg-markdown
+  $ rake test
+
+Patches happily accepted via fork or email.
+
+Changes
+-------
+
+0.2.0 / 2008-07-12 - Adds test suite and plugs all memory leaks.
+0.1.0 / 2008-05-30 - Initial release.
 
 COPYING
 -------
