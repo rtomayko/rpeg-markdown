@@ -6,3 +6,6 @@ ext/*.dll
 lib/*.bundle
 lib/*.so
 lib/*.dll
+pkg
+.ftags
+mkmf.log
