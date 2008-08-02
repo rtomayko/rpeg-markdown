@@ -5,15 +5,15 @@ require 'rake/gempackagetask'
 task :default => :test
 
 DLEXT = Config::CONFIG['DLEXT']
-VERS = '0.2.0'
+VERS = '1.0'
 
 spec =
   Gem::Specification.new do |s|
     s.name              = "rpeg-markdown"
     s.version           = VERS
-    s.summary           = "Fast and correct Markdown implementation"
+    s.summary           = "Fast Markdown implementation"
     s.files             = FileList[
-                            'README','LICENSE','Rakefile',
+                            'README.markdown','LICENSE','Rakefile',
                             '{lib,ext,test}/**.rb','ext/*.{c,h}',
                             'test/MarkdownTest*/**/*',
                             'bin/rpeg-markdown'
@@ -22,7 +22,7 @@ spec =
     s.executables       << 'rpeg-markdown'
     s.require_path      = 'lib'
     s.has_rdoc          = true
-    s.extra_rdoc_files  = ['README', 'LICENSE']
+    s.extra_rdoc_files  = ['LICENSE']
     s.test_files        = FileList['test/markdown_test.rb']
     s.extensions        = ['ext/extconf.rb']
 

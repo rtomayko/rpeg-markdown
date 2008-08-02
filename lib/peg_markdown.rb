@@ -52,6 +52,8 @@ class PEGMarkdown
     extensions.each { |e| send("#{e}=", true) }
   end
 
+  alias to_s text
+
 end
 
 Markdown = PEGMarkdown unless defined? Markdown
