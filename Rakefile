@@ -108,7 +108,7 @@ task 'test:conformance' => [:build] do |t|
 end
 
 desc 'Run version 1.0 conformance suite'
-task 'test:conformance:1.0' => [:build]
+task 'test:conformance:1.0' => [:build] do
   ENV['MARKDOWN_TEST_VER'] = '1.0'
   Rake::Task['test:conformance'].invoke
 end
