@@ -53,6 +53,8 @@ class MarkdownTest < Test::Unit::TestCase
     assert_nothing_raised(ArgumentError) { markdown.to_html(true) }
   end
 
+  
+
   # Build tests for each file in the MarkdownTest test suite
 
   Dir["#{MARKDOWN_TEST_DIR}/Tests/*.text"].each do |text_file|

@@ -11,7 +11,7 @@ spec =
   Gem::Specification.new do |s|
     s.name              = "rpeg-markdown"
     s.version           = VERS
-    s.summary           = "Ruby extension library for peg-markdown"
+    s.summary           = "Fast and correct Markdown implementation"
     s.files             = FileList[
                             'README','LICENSE','Rakefile',
                             '{lib,ext,test}/**.rb','ext/*.{c,h}',
@@ -78,17 +78,18 @@ file 'ext/Makefile' => FileList['ext/{extconf.rb,*.c,*.h,*.rb}'] do
 end
 CLEAN.include 'ext/Makefile'
 
-file "ext/markdown.#{DLEXT}" => FileList['ext/Makefile', 'ext/*.{c,h,rb}'] do |f|
+file "ext/peg_markdown.#{DLEXT}" => FileList['ext/Makefile', 'ext/*.{c,h,rb}'] do |f|
   sh 'cd ext && make'
 end
 CLEAN.include 'ext/*.{o,bundle,so}'
 
-file "lib/markdown.#{DLEXT}" => "ext/markdown.#{DLEXT}" do |f|
+file "lib/peg_markdown.#{DLEXT}" => "ext/peg_markdown.#{DLEXT}" do |f|
   cp f.prerequisites, "lib/", :preserve => true
 end
+CLEAN.include "lib/*.{so,bundle}"
 
-desc 'Build the peg-markdown extension'
-task :build => "lib/markdown.#{DLEXT}"
+desc 'Build the peg_markdown extension'
+task :build => "lib/peg_markdown.#{DLEXT}"
 
 desc 'Run unit and conformance tests'
 task :test => [ 'test:unit', 'test:conformance' ]

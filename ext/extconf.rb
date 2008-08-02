@@ -1,8 +1,6 @@
 require 'mkmf'
 
-dir_config('markdown')
-
-require 'pp'
+dir_config('peg_markdown')
 
 $objs = %w[markdown.o markdown_lib.o markdown_output.o markdown_parser.o]
 
@@ -14,4 +12,4 @@ else
 end
 
 create_header
-create_makefile('markdown')
+create_makefile('peg_markdown')
