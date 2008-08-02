@@ -1,0 +1,125 @@
+VOX POPULI
+==========
+
+(This file is used when the test:mem Rake task is invoked. Feel free to 
+overwrite it in order to test memory under different conditions.)
+
+In these democratic days, any investigation into the trustworthiness and
+peculiarities of popular judgments is of interest. The material about to be
+discussed refers to a small matter, but is much to the point.
+
+A weight-judging competition was carried on at the annual show of the West of
+England Fat Stock and Poultry Exhibition recently held at Plymouth (England).
+A fat ox having been selected, competitors bought stamped and numbered cards,
+for 6d. each, on which to inscribe their respective names, addresses, and
+estimates of what the ox would weigh after it had been slaughtered and
+"dressed." Those who guessed most successfully received prizes. About 800
+tickets were issued, which were kindly lent me for examination after they
+had fulfilled their immediate purpose. These afforded excellent material.
+The judgements were [unbiassed] by passion and uninfluenced by oratory and
+the like. The sixpenny fee deterred practical joking, and the hope of a
+prize and the joy of competition prompted each competitor to do his best.
+The competitors included butchers and farmers, some of whom were highly
+expert in judging the weight of cattle; others were probably guided by such
+information as they might pick up, and by their own fancies. The average
+competitor was probably as well fitted for making a just estimate of the
+dressed weight of the ox, as an average voter is of judging the merits of
+most political issues on which he votes, and the variety among the voters to
+judge justly was probably much the same in either case.
+
+After weeding thirteen cards out of the collection, as being defective or
+illegible, there remained 787 for discussion. I arrayed them in order of
+magnitudes of the estimates, and converted the *cwt.*, *quarters*, and *lbs.*
+in which they were made, into lbs., under which form they will be treated.
+
+### Distribution of the estimates of the dressed weight of a particular living ox, made by 787 different persons.
+
+<table border="1" cellspacing="0" cellpadding="4">
+<tr>
+  <th rowspan="2" colspan="2">Degrees of the length of Array 0&deg;-100&deg;</th>
+  <th rowspan="2">Estimates in lbs.</th>
+  <th colspan="2">Centiles</th>
+  <th rowspan="2">Excess of Observed over Normal</th>
+</tr>
+<tr>
+  <th>Observed Deviates from 1207 lbs.</th>
+  <th>Normal p.e. = 37</th>
+</tr>
+<tr> <td></td> <td>5</td>   <td>1074</td>  <td>-133</td>  <td>-90</td>  <td>+43</td> </tr>
+<tr> <td></td> <td>10</td>  <td>1109</td>  <td> -98</td>  <td>-70</td>  <td>+28</td> </tr>
+<tr> <td></td> <td>15</td>  <td>1126</td>  <td> -81</td>  <td>-57</td>  <td>+24</td> </tr>
+<tr> <td></td> <td>20</td>  <td>1148</td>  <td> -59</td>  <td>-46</td>  <td>+13</td> </tr>
+<tr> <td><i>q</i><sub>1</sub></td> <td>25</td>  <td>1162</td>  <td> -45</td>  <td>-37</td>  <td> +8</td> </tr>
+<tr> <td></td> <td>30</td>  <td>1174</td>  <td> -33</td>  <td>-29</td>  <td> +4</td> </tr>
+<tr> <td></td> <td>35</td>  <td>1181</td>  <td> -26</td>  <td>-21</td>  <td> +5</td> </tr>
+<tr> <td></td> <td>40</td>  <td>1188</td>  <td> -19</td>  <td>-14</td>  <td> +5</td> </tr>
+<tr> <td></td> <td>45</td>  <td>1197</td>  <td> -10</td>  <td> -7</td>  <td> +3</td> </tr>
+<tr> <td><i>m</i></td> <td>50</td>  <td>1207</td>  <td>   0</td>  <td>  0</td>  <td>  0</td> </tr>
+<tr> <td></td> <td>55</td>  <td>1214</td>  <td>  +7</td>  <td> +7</td>  <td>  0</td> </tr>
+<tr> <td></td> <td>60</td>  <td>1219</td>  <td> +12</td>  <td>+14</td>  <td> -2</td> </tr>
+<tr> <td></td> <td>65</td>  <td>1225</td>  <td> +18</td>  <td>+21</td>  <td> -3</td> </tr>
+<tr> <td></td> <td>70</td>  <td>1230</td>  <td> +23</td>  <td>+29</td>  <td> -6</td> </tr>
+<tr> <td><i>q</i><sub>3</sub></td> <td>75</td>  <td>1236</td>  <td> +29</td>  <td>+37</td>  <td> -8</td> </tr>
+<tr> <td></td> <td>80</td>  <td>1243</td>  <td> +36</td>  <td>+46</td>  <td>-10</td> </tr>
+<tr> <td></td> <td>85</td>  <td>1254</td>  <td> +47</td>  <td>+57</td>  <td>-10</td> </tr>
+<tr> <td></td> <td>90</td>  <td>1267</td>  <td> +52</td>  <td>+70</td>  <td>-18</td> </tr>
+<tr> <td></td> <td>95</td>  <td>1293</td>  <td> +86</td>  <td>+90</td>  <td> -4</td> </tr>
+</table>
+
+<p><small><i>q</i><sub>1</sub>, <i>q</i><sub>3</sub>, the first and third quartiles, stand at 
+25&deg; and 75&deg; respectively. <i>m</i>, the median or middlemost value, stands at 50&deg;.
+The dressed weight proved to be 1198 lbs.</small></p>
+
+According to the democratic principle of "one vote one value," the middlemost
+estimate expresses the *vox populi*, every other estimate being condemned as
+too low or high by a majority of the voters (for fuller explanation see 
+[One Vote, One Value](http://galton.org/essays/1900-1911/galton-1907-vote-value.pdf), 
+NATURE, February 28, p. 414). Now the middlemost estimate is
+1207 lb., and the weight of the dressed ox proved to be 1198 lb.; so the 
+*vox populi* was in this case 9 lb., or 0.8 per cent. of the whole weight too
+high. The distribution of the estimates about their middlemost value was of
+the usual type, so far that they clustered closely in its neighbourhood and
+became rapidly more sparse as the distance from it increased.
+
+But they were not scattered symmetrically. One quarter of them deviated more
+than 45 lb. above the middlemost (3.7 per cent.), and another quarter
+deviated more than 29 lb. below it (2.4 per cent.), therefore the range of the
+two middle quarters, that is, of the middlemost half, lay within those
+limits. It would be an equal chance that the estimate written on any card
+picked at random out of the collection lay within or without those limits. In
+other words, the "probably error" of a single observation may be reckoned as
+`1/2(45 + 29)`, or 37 lb. (3.1 per cent.). Taking this for the p.e. of the
+normal curve that is best adapted for comparison with the observed values, the
+results are obtained which appear in above table, and graphically in the
+diagram<sup>1</sup>.
+
+The abnormality of the distribution of the estimates now becomes manifest, and
+is of this kind. The competitors may be imagined to have erred *normally* in
+the first instance, and then to have magnified all errors that were positive.
+The lower half of the "observed" curve agrees for a large part of its range
+with a normal curve having the p.e. = 45, and the upper half with one having
+its p.e. = 29. I have not sufficient knowledge of the mental methods followed
+by those who judge weights to offer a useful opinion as to the cause of this
+curious anomaly. It is partly a psychological question, in answering which the
+various psychophysical investigations of Fechner and other would have to be
+taken into account. Also the anomaly may be partly due to the use of a *small*
+variety of different methods, or formulae, so that the estimates are not
+homogeneous in that respect.
+
+It appears then, in this particular instance, that the *vox populi* is correct
+to within 1 per cent. of the real value, and that the individual estimates are
+abnormally distributed in such a way that it is an equal chance whether one of
+them, selected at random, falls within or without the limits of -3.7 per cent.
+and +2.4 per cent. of their middlemost value.
+
+This result is, I think, more creditable to the trustworthiness of a
+democratic judgement than might have been expected.
+
+The authorities of the more important cattle shows might do service to
+statistics if they made a practice of preserving the sets of cards of this
+description, that they may obtain on future occasions, and loaned them under
+proper restrictions, as these have been, for statistical discussion. The fact
+of the cards being numbered makes it possible to ascertain whether any given
+set is complete.
+
+-- Francis Galton.

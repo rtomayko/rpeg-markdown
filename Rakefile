@@ -132,7 +132,7 @@ desc "See how much memory we're losing"
 task 'test:mem' => %w[submodule:exist build] do |t|
   $: << File.join(File.dirname(__FILE__), "lib")
   require 'markdown'
-  FileList['test.txt', 'peg-markdown/MarkdownTest_1.0.3/Tests/*.text'].each do |file|
+  FileList['test/mem.txt', 'peg-markdown/MarkdownTest_1.0.3/Tests/*.text'].each do |file|
     printf "%s: \n", file
     markdown = Markdown.new(File.read(file))
     iterations = (ENV['N'] || 100).to_i
