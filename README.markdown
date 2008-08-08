@@ -16,6 +16,13 @@ Synopsis
     >> puts Markdown.new('_Hello World!_', :smart, :filter_html).to_html
     <p><em>Hello World!</em></p>
 
+    >> puts Markdown.new('_Hello World!_').to_latex
+    \emph{Hello World!}
+
+    >> puts Markdown.new('_Hello World!_').to_groff_mm
+    .P
+    \fIHello world!\fR
+
     >> PEGMarkdown.new('Hello! World!')
 
 Installation / Hacking
